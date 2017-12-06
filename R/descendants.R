@@ -1,8 +1,10 @@
 #' Get set of terms containing all descendants of terms in a given set
 #'
-#' @template ontology
-#' @template roots
-#' @template exclude_roots
+#' @param ontology \code{ontology_index} object.
+#' @param roots Character vector of IDs for terms with respect to which
+#' descendants are to be defined.
+#' @param exclude_roots Boolean determining whether to remove the given
+#' \code{roots} terms from the result.
 #' @return Character vector of terms
 #' @seealso \code{link{get_ancestors}}
 #' @examples
@@ -18,23 +20,23 @@ get_descendants <- function(ontology, roots, exclude_roots=FALSE) {
 }
 
 #' Intersect a set of terms with the descendants of a given set of roots
-#' 
-#' @template ontology
-#' @template roots
-#' @template terms
+#'
+#' @inheritParams get_descendants
+#' @param roots Character vector of IDs for terms with respect to which descendants are to be defined.
+#' @param terms Character vector of ontological terms.
 #' @return Character vector of terms
-#' @examples 
+#' @examples
 #' data(hpo)
 #' intersection_with_descendants(hpo, c("HP:0001872", "HP:0000707"), c("HP:0001873", "HP:0011877"))
 #' @export
 #' @seealso \code{\link{exclude_descendants}}, \code{\link{prune_descendants}}
-intersection_with_descendants <- function(ontology, roots, terms) { 
+intersection_with_descendants <- function(ontology, roots, terms) {
 	if (class(roots) != "character" | class(terms) != "character")
 		stop("'roots' and 'terms' must be character vectors of term IDs")
 	as.character(if (length(terms) > 0)
 		terms[
 			sapply(
-				ontology$ancestors[terms], 
+				ontology$ancestors[terms],
 				function(ancs) any(ancs %in% roots)
 			)
 		]
@@ -46,9 +48,9 @@ intersection_with_descendants <- function(ontology, roots, terms) {
 #'
 #' Exclude from set \code{terms}, any terms that are either in, or descend from one of, the set \code{roots}.
 #'
-#' @template ontology
-#' @template roots
-#' @template terms
+#' @inheritParams
+#' @inheritParams intersection_with_descendants
+#' @inheritParams intersection_with_descendants
 #' @return Character vector of terms
 #' @export
 #' @seealso \code{\link{intersection_with_descendants}}, \code{\link{prune_descendants}}
@@ -61,13 +63,13 @@ exclude_descendants <- function(ontology, roots, terms) {
 	))
 }
 
-#' Exclude terms descending from a given set of roots but include those roots which were originally implicitly present. 
+#' Exclude terms descending from a given set of roots but include those roots which were originally implicitly present.
 #'
 #' Given two sets of terms, \code{roots} and \code{terms}, construct a set of terms containing those in \code{terms} which do not descend from any term in \code{roots}, and also any terms in \code{roots} which are ancestors of any term in \code{terms}.
 #'
-#' @template ontology
-#' @template roots
-#' @template terms
+#' @inheritParams get_descendants
+#' @inheritParams intersection_with_descendants
+#' @inheritParams intersection_with_descendants
 #' @return Character vector of terms
 #' @export
 #' @seealso \code{\link{exclude_descendants}}, \code{\link{intersection_with_descendants}}

@@ -28,4 +28,3 @@ Get logical descendancy matrix for set of terms
 data(hpo)
 get_term_descendancy_matrix(hpo, c("HP:0001873", "HP:0011877"))
 }
-

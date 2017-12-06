@@ -9,7 +9,8 @@ prune_descendants(ontology, roots, terms)
 \arguments{
 \item{ontology}{\code{ontology_index} object.}
 
-\item{roots}{Character vector of IDs for terms with respect to which descendants are to be defined.}
+\item{roots}{Character vector of IDs for terms with respect to which
+descendants are to be defined.}
 
 \item{terms}{Character vector of ontological terms.}
 }
@@ -22,4 +23,3 @@ Given two sets of terms, \code{roots} and \code{terms}, construct a set of terms
 \seealso{
 \code{\link{exclude_descendants}}, \code{\link{intersection_with_descendants}}
 }
-

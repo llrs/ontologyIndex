@@ -9,9 +9,11 @@ get_descendants(ontology, roots, exclude_roots = FALSE)
 \arguments{
 \item{ontology}{\code{ontology_index} object.}
 
-\item{roots}{Character vector of IDs for terms with respect to which descendants are to be defined.}
+\item{roots}{Character vector of IDs for terms with respect to which
+descendants are to be defined.}
 
-\item{exclude_roots}{Boolean determining whether to remove the given \code{roots} terms from the result.}
+\item{exclude_roots}{Boolean determining whether to remove the given
+\code{roots} terms from the result.}
 }
 \value{
 Character vector of terms
@@ -26,4 +28,3 @@ get_descendants(hpo, roots="HP:0001873")
 \seealso{
 \code{link{get_ancestors}}
 }
-

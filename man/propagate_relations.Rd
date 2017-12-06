@@ -16,7 +16,8 @@ propagate_relations(ontology, roots, relations, use_inverse_relations = FALSE,
 
 \item{use_inverse_relations}{Boolean vector indicating whether to propagate inverse relations. If \code{use_inverse_relations} is the same length as \code{relations}, each element determines whether the corresponding relation in \code{relations} is inverted.}
 
-\item{exclude_roots}{Boolean determining whether to remove the given \code{roots} terms from the result.}
+\item{exclude_roots}{Boolean determining whether to remove the given
+\code{roots} terms from the result.}
 }
 \value{
 Character vector of terms
@@ -27,4 +28,3 @@ An `ontology_index` can contain multiple relations (for example in the case of t
 \seealso{
 \code{\link{get_ancestors}}, \code{\link{get_descendants}}
 }
-

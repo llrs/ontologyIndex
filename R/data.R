@@ -35,7 +35,7 @@ ancs_from_pars <- function(pars, chld) {
 #' @param name Character vector of term labels.
 #' @param obsolete Logical vector indicating whether given terms are obsolete.
 #' @param version Version information about the ontology.
-#' @param ... Additional arguments, each of which should be either a vector or list of term properties, each with the same length as \code{id}. 
+#' @param ... Additional arguments, each of which should be either a vector or list of term properties, each with the same length as \code{id}.
 #' @export
 #' @examples
 #' animal_superclasses <- list(animal=character(0), mammal="animal", cat="mammal", fish="animal")
@@ -71,7 +71,7 @@ tag_regexp <- "^(relationship: )?([^ \t]*[^:]):?\\s+(.+)"
 
 #' Get names of relations used in OBO file
 #'
-#' @param file File path of OBO formatted file.
+#' @inheritParams get_ontology
 #' @export
 #' @seealso \code{\link{get_ontology}}
 get_relation_names <- function(file) {
@@ -84,14 +84,14 @@ get_relation_names <- function(file) {
 #' Read ontology from OBO file into R
 #'
 #' @param file File path of OBO formatted file.
-#' @param propagate_relationships Character vector of relations 
+#' @param propagate_relationships Character vector of relations
 #' @param extract_tags Character value: either "minimal" or "everything", determining whether to extract only the properties of terms which are required to run functions in the package - i.e. \code{"id", "name", "parents", "children"} and \code{"ancestors"} - or extract all properties provided in the file. Term properties are named in the resulting \code{ontology_index} as their corresponding tags in the OBO file (except \code{"parents"}, \code{"children"} and \code{"ancestors"} which are appended with \code{"_OBO"} to avoid clashing with standard \code{ontology_index} properties. Defaults to \code{"minimal"}.
 #' @return \code{ontology_index} object.
 #' @export
 #' @seealso \code{\link{get_relation_names}}
 #' @importFrom stats setNames
 get_ontology <- function(
-	file, 
+	file,
 	propagate_relationships="is_a",
 	extract_tags="minimal"
 ) {
@@ -137,7 +137,7 @@ get_ontology <- function(
 	names(properties) <- gsub(x=names(properties), pattern="^((parents)|(children)|(ancestors))$", replacement="\\1_OBO")
 
 	do.call(
-		what=ontology_index, 
+		what=ontology_index,
 		c(
 			list(
 				version=substr(lines[seq(term_lines[1]-1)], 1, 1000),
@@ -153,15 +153,15 @@ get_ontology <- function(
 get_OBO <- get_ontology
 
 #' \code{ontology_index} object encapsulating structure of the Gene Ontology (HPO) comprising a \code{list} of lists/vectors of properties of GO terms indexed by term ID
-#' 
-#' @name go 
+#'
+#' @name go
 #' @title GO index
 #' @docType data
 #' @format List of lists and vectors
 NULL
 
 #' \code{ontology_index} object encapsulating structure of the Human Phenotype Ontology (HPO) comprising a \code{list} of lists/vectors of properties of HPO terms indexed by term ID
-#' 
+#'
 #' @name hpo
 #' @title HPO index
 #' @docType data
@@ -169,16 +169,16 @@ NULL
 NULL
 
 #' \code{ontology_index} object encapsulating structure of the Mammalian Phenotype Ontology (MPO) comprising a \code{list} of lists/vectors of properties of MPO terms indexed by term ID
-#' 
+#'
 #' @name mpo
 #' @title MPO index
 #' @docType data
 #' @format List of lists and vectors
 NULL
 
-#' Perform simple consistency checks on \code{ontology_index} object 
+#' Perform simple consistency checks on \code{ontology_index} object
 #'
-#' @template ontology
+#' @inheritParams get_descendants
 #' @param stop_if_invalid Logical value determining whether the function should call \code{stop} and print an error message upon finding that the given \code{ontology_index} is in valid.
 #' @export
 check <- function(ontology, stop_if_invalid=FALSE) {

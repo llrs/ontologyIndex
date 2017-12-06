@@ -1,6 +1,6 @@
 #' Get property of individual ontological term
 #'
-#' @template ontology
+#' @inheritParams get_descendants
 #' @param property_name Name of property.
 #' @param term Character value of term ID.
 #' @param as_names Logical value determining whether to return character vector of names (defaults to \code{FALSE}).
@@ -19,7 +19,7 @@ get_term_property <- function(ontology, property_name, term, as_names=FALSE) {
 	if (as_names) {
 		if (all(result %in% ontology[["id"]]))
 			ontology[["name"]][result]
-		else 
+		else
 			stop(paste0("Could not convert '", as.character(result), "' to term names"))
 	} else {
 		result
@@ -27,15 +27,15 @@ get_term_property <- function(ontology, property_name, term, as_names=FALSE) {
 }
 
 #' Get logical descendancy matrix for set of terms
-#' 
+#'
 #' @return A logical square matrix of with \code{length(terms)} columns and rows. \code{result[row_term,col_term] == TRUE} if \code{row_term} is an ancestor (and not the same as) of \code{col_term}.
 #'
-#' @template ontology
-#' @template terms
+#' @inheritParams get_descendants
+#' @inheritParams intersection_with_descendants
 #' @param rows Rows for resultant matrix (defaults to \code{terms}).
 #' @param cols Cols for resultant matrix (defaults to \code{terms}).
 #' @return A logical matrix.
-#' @examples 
+#' @examples
 #' data(hpo)
 #' get_term_descendancy_matrix(hpo, c("HP:0001873", "HP:0011877"))
 #' @export
@@ -58,8 +58,8 @@ get_term_descendancy_matrix <- function(ontology, terms=NULL, rows=terms, cols=t
 
 #' Remove redundant/implied terms from a set of terms
 #'
-#' @template ontology
-#' @template terms
+#' @inheritParams get_descendants
+#' @inheritParams intersection_with_descendants
 #' @return Character vector of terms
 #' @examples
 #' data(hpo)
@@ -80,8 +80,8 @@ minimal_set <- function(ontology, terms) {
 
 #' Get set of terms containing all ancestors of terms in a given set
 #'
-#' @template ontology
-#' @template terms
+#' @inheritParams get_descendants
+#' @inheritParams intersection_with_descendants
 #' @return Character vector of all terms which are an ancestor of at least one term in \code{terms}, including the terms themselves
 #' @seealso \code{link{get_descendants}}
 #' @examples
@@ -101,8 +101,8 @@ get_ancestors <- function(ontology, terms) {
 
 #' Get frequency of each term in a set of phenotypes
 #'
-#' @template ontology
-#' @template term_sets
+#' @inheritParams get_descendants
+#' @inheritParams get_term_info_content
 #' @param patch_missing Logical indicating whether to include whole ontology even if they're not present in the \code{term_sets} as if they had occurred once
 #' @return Numeric vector of information contents, named by corresponding terms. Takes into account ancestors, in the sense that all ancestor terms implied by the phenotypes are considered 'on'
 #' @seealso \code{\link{get_term_info_content}}
@@ -111,7 +111,7 @@ get_ancestors <- function(ontology, terms) {
 #' get_term_frequencies(hpo, list("HP:0001873"))
 #' @export
 get_term_frequencies <- function(
-	ontology, 
+	ontology,
 	term_sets,
 	patch_missing=FALSE
 ) {
@@ -120,8 +120,8 @@ get_term_frequencies <- function(
 
 #' Get information content of each term in a set of phenotypes
 #'
-#' @template ontology
-#' @template term_sets
+#' @inheritParams get_descendants
+#' @param term_sets List of character vectors of ontological term IDs.
 #' @param patch_missing Logical indicating whether to include all ontology terms even if they're not present in the \code{term_sets} as if they had occurred once
 #' @return Numeric vector of information contents, named by corresponding terms. Takes into account ancestors, in the sense that all ancestor terms implied by the phenotypes are considered 'on'
 #' @examples
@@ -129,7 +129,7 @@ get_term_frequencies <- function(
 #' get_term_info_content(hpo, list("HP:0001873"))
 #' @export
 get_term_info_content <- function(
-	ontology, 
+	ontology,
 	term_sets,
 	patch_missing=FALSE
 ) {
@@ -139,27 +139,26 @@ get_term_info_content <- function(
 	names(terms.numeric) <- names(terms.tab)
 
 	result <- log(total.patients) - ifelse(terms.numeric==0, log(total.patients), log(terms.numeric))
-	
+
 	if (patch_missing) {
 		#include missing terms and give max information content...
 		missing.terms <- setdiff(ontology$id, names(result))
 		missing.infos <- rep(max(result), length(missing.terms))
 		names(missing.infos) <- missing.terms
-		result <- c(result, missing.infos) 
+		result <- c(result, missing.infos)
 	}
 
 	result
 }
 
-#' Select terms by propagating relations from a set of terms 
+#' Select terms by propagating relations from a set of terms
 #'
 #' An `ontology_index` can contain multiple relations (for example in the case of the Gene Ontology, \code{"is_a"} and \code{"part_of"} could be stored as separate properties in an `ontology_index`). Transitive relations (i.e. relations such that x related to y and y related to z implies x related to z, for example the relation 'is an ancestor of') stored by an `ontology_index` can be propagated using this function. The 'inverse relations' (i.e. x inversely related to y if y related to x) can also be propagated by setting the \code{use_inverse_relations} parameter to \code{TRUE}.
 #'
-#' @template ontology
+#' @inheritParams get_descendants
 #' @param roots Character vector of term IDs from which relations will be propagated.
 #' @param relations Character vector given names of transitive relations to be propagated.
 #' @param use_inverse_relations Boolean vector indicating whether to propagate inverse relations. If \code{use_inverse_relations} is the same length as \code{relations}, each element determines whether the corresponding relation in \code{relations} is inverted.
-#' @template exclude_roots
 #' @return Character vector of terms
 #' @seealso \code{\link{get_ancestors}}, \code{\link{get_descendants}}
 #' @export

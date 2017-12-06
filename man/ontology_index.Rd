@@ -28,4 +28,3 @@ animal_superclasses <- list(animal=character(0), mammal="animal", cat="mammal", 
 animal_ontology <- ontology_index(parents=animal_superclasses)
 unclass(animal_ontology)
 }
-
