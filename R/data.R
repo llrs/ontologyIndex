@@ -75,10 +75,13 @@ tag_regexp <- "^(relationship: )?([^ \t]*[^:]):?\\s+(.+)"
 #' @export
 #' @seealso \code{\link{get_ontology}}
 get_relation_names <- function(file) {
-	lines <- grep(value=TRUE, pattern=tag_regexp, x=readLines(file))
-	parts <- regmatches(x=lines, regexec(text=lines, pattern=tag_regexp))
-	relation <- !sapply(parts, "[", 2) == ""
-	c(intersect("is_a", unique(sapply(parts[!relation], "[", 3))), unique(sapply(parts[relation], "[", 3)))
+  # Subset for those that have relationship
+  all_relationships <- grep("^relationship: ", readLines(file), value = TRUE)
+  # Get the first word after relationship
+  relationships <- gsub("^relationship: (\\w+).*", replacement = "\\1", x =
+                  all_relationships)
+  # Pressumably is_a should be on the data
+	unique(c(relationships, "is_a"))
 }
 
 #' Read ontology from OBO file into R
