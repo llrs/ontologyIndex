@@ -48,8 +48,6 @@ intersection_with_descendants <- function(ontology, roots, terms) {
 #'
 #' Exclude from set \code{terms}, any terms that are either in, or descend from one of, the set \code{roots}.
 #'
-#' @inheritParams
-#' @inheritParams intersection_with_descendants
 #' @inheritParams intersection_with_descendants
 #' @return Character vector of terms
 #' @export
@@ -68,7 +66,6 @@ exclude_descendants <- function(ontology, roots, terms) {
 #' Given two sets of terms, \code{roots} and \code{terms}, construct a set of terms containing those in \code{terms} which do not descend from any term in \code{roots}, and also any terms in \code{roots} which are ancestors of any term in \code{terms}.
 #'
 #' @inheritParams get_descendants
-#' @inheritParams intersection_with_descendants
 #' @inheritParams intersection_with_descendants
 #' @return Character vector of terms
 #' @export
